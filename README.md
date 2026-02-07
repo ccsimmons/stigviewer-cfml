@@ -1,34 +1,31 @@
 # StigViewer CFML
 
-A CommandBox module for reading, filtering, and rendering DISA STIG XCCDF content using CFML.
+A CommandBox module for inspecting and reporting on DISA STIG XCCDF
+checklists directly from the CLI.
 
-StigViewer CFML allows you to inspect STIG checklists directly from the CommandBox CLI without requiring the official DISA STIG Viewer application. You can summarize vulnerabilities, filter findings by severity, export rule data to JSON, and generate human-readable HTML reports.
+StigViewer CFML lets you work with STIGs on macOS, Linux, or servers
+where the official DISA STIG Viewer is unavailable. You can summarize
+vulnerabilities, filter findings by severity or CAT level, export rule
+data to JSON, and generate readable HTML reports without leaving the
+terminal.
 
-The built-in HTML renderer is the primary supported output. StigViewer CFML can optionally attempt to use DISA XSL stylesheets (such as `STIG_unclass.xsl`), but modern Java runtimes often block the legacy XSLT engine required by those stylesheets. When that occurs, the module automatically falls back to the built-in renderer.
+The built-in HTML renderer is the primary supported output. StigViewer
+CFML can optionally attempt to use DISA XSL stylesheets (such as
+`STIG_unclass.xsl`), but modern Java runtimes often block the legacy
+XSLT engine required by those stylesheets. When that occurs, the module
+automatically falls back to the built-in renderer.
 
----
-
-## Install
-
-First make sure you have CommandBox installed, then type:
-
-    box install stigviewer-cfml@ccsimmons
-
-Or if you are already within the CommandBox CLI, you can just type:
-
-    install stigviewer-cfml@ccsimmons
-
----
+------------------------------------------------------------------------
 
 ## Commands
 
-- `stigviewer summary` – summarize STIG rules and severities
-- `stigviewer export` – export rules to JSON
-- `stigviewer render` – generate an HTML report
-- `stigviewer version`
-- `stigviewer about`
+-   `stigviewer summary` -- summarize STIG rules and severities
+-   `stigviewer export` -- export rules to JSON
+-   `stigviewer render` -- generate an HTML report
+-   `stigviewer version`
+-   `stigviewer about`
 
----
+------------------------------------------------------------------------
 
 ## Summarize a STIG
 
@@ -44,9 +41,9 @@ Or if you are already within the CommandBox CLI, you can just type:
 
 ### Severity mappings
 
-- CAT I → high
-- CAT II → medium
-- CAT III → low
+-   CAT I → high
+-   CAT II → medium
+-   CAT III → low
 
 Supported flag forms:
 
@@ -54,7 +51,7 @@ Supported flag forms:
     --severity medium
     -severity=medium
 
----
+------------------------------------------------------------------------
 
 ## Export rules to JSON
 
@@ -68,12 +65,12 @@ Export only CAT I:
 
 ### JSON Output Includes
 
-- `TOTALRULECOUNT`
-- `MATCHEDRECORDCOUNT`
-- `SEVERITYFILTER` (or `none`)
-- `RULES`
+-   `TOTALRULECOUNT`
+-   `MATCHEDRECORDCOUNT`
+-   `SEVERITYFILTER` (or `none`)
+-   `RULES`
 
----
+------------------------------------------------------------------------
 
 ## Render HTML Report
 
@@ -82,28 +79,32 @@ Default rendering (recommended):
     stigviewer render file.xml
 
 Default output:
+
     report.html
 
 ### Optional XSLT Rendering
 
-If you wish to attempt rendering with the official DISA stylesheet:
+To attempt rendering with the official DISA stylesheet:
 
     stigviewer render file.xml --xsl=STIG_unclass.xsl
 
-If `STIG_unclass.xsl` is located in the same directory as the XML, the `--xsl` argument may be omitted when `--xslt=true` is provided.
+If `STIG_unclass.xsl` is located in the same directory as the XML, the
+module will automatically attempt to use it when requested.
 
-Note: On modern Java versions the XSLT engine may be blocked. If so, StigViewer CFML will automatically fall back to the built-in renderer while still producing a complete report.
+> Note: On modern Java versions the DISA XSLT engine is often blocked.
+> When this happens StigViewer CFML automatically falls back to the
+> built-in renderer and still produces a complete report.
 
----
+------------------------------------------------------------------------
 
 ## Defaults
 
-- `stigviewer export` → `report.json`
-- `stigviewer render` → `report.html`
+-   `stigviewer export` → `report.json`
+-   `stigviewer render` → `report.html`
 
 Both write to a writable directory unless `--out` is specified.
 
----
+------------------------------------------------------------------------
 
 ## Severity Filtering
 
@@ -114,21 +115,19 @@ Accepted values:
     high, medium, low, unknown
     cat1, cat2, cat3
 
----
+------------------------------------------------------------------------
 
 ## STIG Downloads
 
-Official DISA STIG XCCDF files:
+Official DISA STIG XCCDF files: https://www.cyber.mil/stigs/downloads/
 
-https://www.cyber.mil/stigs/downloads/
-
----
+------------------------------------------------------------------------
 
 ## License
 
-Apache 2.0 — see `LICENSE`.
+Apache 2.0 --- see `LICENSE`.
 
----
+------------------------------------------------------------------------
 
 ## Changelog
 
