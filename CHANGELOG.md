@@ -78,3 +78,8 @@ StigViewer CFML – Changelog
 
 ## 0.1.0 – 2026-02-06
 - Initial proof-of-concept: basic XCCDF parsing and rule enumeration.
+
+0.8.1 – 2026-02-06
+-------------------
+- Fixed parsing for severity filters passed as `--severity VALUE` (space form) for `summary`, `export`, and `render`.
+

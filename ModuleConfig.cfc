@@ -4,7 +4,7 @@ component {
   this.title       = "StigViewer CFML";
   this.author      = "Chris Simmons (csimmons.dev)";
   this.description = "StigViewer CFML – Read and render DISA STIG XCCDF content";
-  this.version     = "0.8.0";
+  this.version     = "0.8.1";
 
   function configure() {
     binder.map( "StigService@stigviewer-cfml" )

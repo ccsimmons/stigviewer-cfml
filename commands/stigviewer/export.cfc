@@ -1,6 +1,7 @@
 component {
 
   property name="stigService" inject="StigService@stigviewer-cfml";
+
   /**
    * Export STIG rules to JSON.
    *
@@ -9,7 +10,6 @@ component {
    * --severity Comma-delimited severities or CATs:
    *            high,medium,low,unknown, cat1,cat2,cat3
    */
-
   function run(
     required string xml,
     string maybeSeverity = "",
@@ -19,14 +19,32 @@ component {
     string cat = ""
   ) {
     try {
+
       var xmlAbs = resolvePath( arguments.xml );
       var xmlDir = getDirectoryFromPath( xmlAbs );
+
+      // Severity filter (supports --severity value, --severity=value, and CAT aliases)
       var rawSev = _pickSeverityValue( arguments, arguments.maybeSeverity );
+
+      // CommandBox quirk:
+      // "-severity low" can put "low" into the positional "out" argument.
+      // Detect that and treat it as severity so we don't write a file called "low".
+      if (
+        !len( trim( rawSev & "" ) )
+        &&
+        listFindNoCase(
+          "high,medium,low,unknown,cat1,cat2,cat3,cati,catii,catiii",
+          trim( arguments.out & "" )
+        )
+      ) {
+        rawSev = arguments.out;
+        arguments.out = "";
+      }
 
       if ( !len( trim( arguments.out & "" ) ) ) arguments.out = "report.json";
 
       var payload = stigService.exportXccdfJson( xmlAbs, rawSev );
-      var target = resolvePath( arguments.out );
+      var target  = resolvePath( arguments.out );
 
       try {
         directoryCreate( getDirectoryFromPath( target ), true, true );
@@ -46,13 +64,16 @@ component {
       }
 
       print.greenLine( "Wrote: #target#" );
+
     } catch ( any e ) {
+
       if ( structKeyExists( e, "type" ) && findNoCase( "FileNotFound", e.type & "" ) ) {
         print.redLine( "ERROR: File not found: " & arguments.xml );
         print.line( "Tip: check the filename and path" );
         setExitCode( 1 );
         return;
       }
+
       rethrow;
     }
   }
@@ -61,6 +82,7 @@ component {
     for ( var k in args ) {
       var key = lcase( k & "" );
       key = rereplace( key, "^[\-]+", "", "all" );
+
       if ( left( key, 9 ) == "severity=" ) return mid( key, 10, len( key ) );
       if ( left( key, 4 ) == "sev=" ) return mid( key, 5, len( key ) );
       if ( left( key, 4 ) == "cat=" ) return mid( key, 5, len( key ) );
@@ -70,11 +92,19 @@ component {
 
   private string function _pickSeverityValue( required struct args, string positional = "" ) {
     var raw = "";
+
     if ( structKeyExists( args, "severity" ) ) raw = args.severity & "";
+
+    // When severity is passed as "--severity low", CommandBox may bind severity=true.
+    // Treat boolean values as "not provided" so we can fall through to positional parsing.
+    if ( lcase( trim( raw ) ) == "true" || lcase( trim( raw ) ) == "false" ) raw = "";
+
     if ( !len( trim( raw ) ) && structKeyExists( args, "sev" ) ) raw = args.sev & "";
     if ( !len( trim( raw ) ) && structKeyExists( args, "cat" ) ) raw = args.cat & "";
     if ( !len( trim( raw ) ) ) raw = _extractSeverityFromArgumentKeys( args );
     if ( !len( trim( raw ) ) && len( trim( positional & "" ) ) ) raw = positional & "";
+
     return raw;
   }
+
 }

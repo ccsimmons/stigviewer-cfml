@@ -1,7 +1,7 @@
 {
   "name": "stigviewer-cfml",
   "slug": "stigviewer-cfml@ccsimmons",
-  "version": "0.8.0",
+  "version": "0.8.1",
   "type": "commandbox-modules",
   "private": true,
   "author": "Chris Simmons (csimmons.dev)",

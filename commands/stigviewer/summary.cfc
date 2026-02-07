@@ -61,7 +61,8 @@ component {
   private string function _pickSeverityValue( required struct args, string positional = "" ) {
     var raw = "";
     if ( structKeyExists( args, "severity" ) ) raw = args.severity & "";
-    if ( !len( trim( raw ) ) && structKeyExists( args, "sev" ) ) raw = args.sev & "";
+    
+    if ( lcase( trim( raw ) ) == "true" || lcase( trim( raw ) ) == "false" ) raw = "";if ( !len( trim( raw ) ) && structKeyExists( args, "sev" ) ) raw = args.sev & "";
     if ( !len( trim( raw ) ) && structKeyExists( args, "cat" ) ) raw = args.cat & "";
     if ( !len( trim( raw ) ) ) raw = _extractSeverityFromArgumentKeys( args );
     if ( !len( trim( raw ) ) && len( trim( positional & "" ) ) ) raw = positional & "";
