@@ -1,6 +1,10 @@
 StigViewer CFML – Changelog
 ==========================
 
+## 0.8.1 – 2026-02-06
+-------------------
+- Fixed parsing for severity filters passed as `--severity VALUE` (space form) for `summary`, `export`, and `render`.
+
 ## 0.8.0 – 2026-02-06
 - Friendly CLI error for missing XCCDF files (prints a helpful message and exits non-zero, no stack trace).
 - Improved error handling when the input XCCDF file path does not exist (clean StigViewer error instead of a raw stack trace).
@@ -78,8 +82,3 @@ StigViewer CFML – Changelog
 
 ## 0.1.0 – 2026-02-06
 - Initial proof-of-concept: basic XCCDF parsing and rule enumeration.
-
-0.8.1 – 2026-02-06
--------------------
-- Fixed parsing for severity filters passed as `--severity VALUE` (space form) for `summary`, `export`, and `render`.
-
