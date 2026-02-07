@@ -1,7 +1,7 @@
 {
   "name": "stigviewer-cfml",
   "slug": "stigviewer-cfml@ccsimmons",
-  "version": "0.7.9",
+  "version": "0.8.0",
   "type": "commandbox-modules",
   "author": "Chris Simmons (csimmons.dev)",
   "shortDescription": "CommandBox module for reading, filtering, and rendering DISA STIG XCCDF content.",

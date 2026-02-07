@@ -1,7 +1,6 @@
 component {
 
   property name="stigService" inject="StigService@stigviewer-cfml";
-
   /**
    * Print a high-level summary of an XCCDF STIG.
    *
@@ -9,27 +8,43 @@ component {
    * --severity Comma-delimited severities or CATs:
    *            high,medium,low,unknown, cat1,cat2,cat3
    */
-  function run( required string path ) {
 
-    var xmlAbs = resolvePath( arguments.path );
+  function run(
+    required string xml,
+    string maybeSeverity = "",
+    string severity = "",
+    string sev = "",
+    string cat = ""
+  ) {
+    try {
+      var xmlAbs = resolvePath( arguments.xml );
+      var rawSev = _pickSeverityValue( arguments, arguments.maybeSeverity );
 
-    var rawSev = structKeyExists( arguments, "severity" ) ? ( arguments.severity & "" ) : "";
-    if ( !len( trim( rawSev ) ) ) rawSev = _extractSeverityFromArgumentKeys( arguments );
+      var result = stigService.readXccdfSummary(
+        path           = xmlAbs,
+        severityFilter = rawSev
+      );
 
-    var data = stigService.readXccdfSummary( xmlAbs, rawSev );
-
-    print.line( data.title );
-    print.line( "Version: " & data.version );
-    print.line( "" );
-    print.line( "Total rules: " & data.totalRules );
-    print.line( "Matched rules: " & data.matchedRules );
-    print.line( "Severity Filter: " & ( len( trim( rawSev ) ) ? rawSev : "none" ) );
-    print.line( "" );
-    print.line( "Severity counts (matched set):" );
-    print.line( "  HIGH: " & data.counts.HIGH );
-    print.line( "  MEDIUM: " & data.counts.MEDIUM );
-    print.line( "  LOW: " & data.counts.LOW );
-    print.line( "  UNKNOWN: " & data.counts.UNKNOWN );
+      print.boldLine( result.title );
+      print.line( "Version: #result.version#" );
+      print.line( "" );
+      print.line( "Total rules: #result.totalRules#" );
+      print.line( "Matched rules: #result.matchedRules#" );
+      print.line( "" );
+      print.line( "Severity counts (matched set):" );
+      print.line( "  HIGH: #result.counts.HIGH#" );
+      print.line( "  MEDIUM: #result.counts.MEDIUM#" );
+      print.line( "  LOW: #result.counts.LOW#" );
+      print.line( "  UNKNOWN: #result.counts.UNKNOWN#" );
+    } catch ( any e ) {
+      if ( structKeyExists( e, "type" ) && findNoCase( "FileNotFound", e.type & "" ) ) {
+        print.redLine( "ERROR: File not found: " & arguments.xml );
+        print.line( "Tip: check the filename and path" );
+        setExitCode( 1 );
+        return;
+      }
+      rethrow;
+    }
   }
 
   private string function _extractSeverityFromArgumentKeys( required struct args ) {
@@ -43,4 +58,13 @@ component {
     return "";
   }
 
+  private string function _pickSeverityValue( required struct args, string positional = "" ) {
+    var raw = "";
+    if ( structKeyExists( args, "severity" ) ) raw = args.severity & "";
+    if ( !len( trim( raw ) ) && structKeyExists( args, "sev" ) ) raw = args.sev & "";
+    if ( !len( trim( raw ) ) && structKeyExists( args, "cat" ) ) raw = args.cat & "";
+    if ( !len( trim( raw ) ) ) raw = _extractSeverityFromArgumentKeys( args );
+    if ( !len( trim( raw ) ) && len( trim( positional & "" ) ) ) raw = positional & "";
+    return raw;
+  }
 }

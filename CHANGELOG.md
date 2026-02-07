@@ -1,6 +1,10 @@
 StigViewer CFML – Changelog
 ==========================
 
+## 0.8.0 – 2026-02-06
+- Friendly CLI error for missing XCCDF files (prints a helpful message and exits non-zero, no stack trace).
+- Improved error handling when the input XCCDF file path does not exist (clean StigViewer error instead of a raw stack trace).
+
 ## 0.7.9 – 2026-02-06
 - Stabilized `stigviewer version` and `stigviewer about` commands.
 - Corrected module version reporting.

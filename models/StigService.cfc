@@ -6,6 +6,14 @@ component {
 
   function readXccdfSummary( required string path, string severityFilter = "" ) {
 
+    // Validate input path early for a cleaner CLI error
+    if ( !fileExists( arguments.path ) ) {
+      throw(
+        type    = "StigViewer.readXccdfSummary.FileNotFound",
+        message = "XCCDF file not found: " & arguments.path
+      );
+    }
+
     var xmlStr = fileRead( arguments.path, "utf-8" );
     var parser = variables.xccdfParser;
 
@@ -32,6 +40,14 @@ component {
 
   function exportXccdfJson( required string path, string severityFilter = "" ) {
 
+    // Validate input path early for a cleaner CLI error
+    if ( !fileExists( arguments.path ) ) {
+      throw(
+        type    = "StigViewer.exportXccdfJson.FileNotFound",
+        message = "XCCDF file not found: " & arguments.path
+      );
+    }
+
     var xmlStr = fileRead( arguments.path, "utf-8" );
     var parser = variables.xccdfParser;
 
@@ -54,6 +70,14 @@ component {
     string severityFilter = "none"
   ) {
 
+    // Validate input path early for a cleaner CLI error
+    if ( !fileExists( arguments.path ) ) {
+      throw(
+        type    = "StigViewer.renderXccdfBasicHtml.FileNotFound",
+        message = "XCCDF file not found: " & arguments.path
+      );
+    }
+
     var xmlStr = fileRead( arguments.path, "utf-8" );
     var parser = variables.xccdfParser;
 
@@ -62,7 +86,7 @@ component {
     meta.severityFilter     = len( trim( arguments.severityFilter & "" ) ) ? arguments.severityFilter : "none";
     meta.generatedOnDate    = dateFormat( now(), "mm/dd/yyyy" );
     meta.generatedOnTime    = timeFormat( now(), "hh:mm:ss tt" );
-    meta.stigViewerVersion  = "0.7.9";
+    meta.stigViewerVersion  = "0.8.0";
 
     var data = parser.rules( xmlStr, arguments.path, arguments.severities );
     meta.matchedRecordCount = arrayLen( data.rules );
