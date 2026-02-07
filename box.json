@@ -1,0 +1,26 @@
+{
+  "name": "stigviewer-cfml",
+  "slug": "stigviewer-cfml@ccsimmons",
+  "version": "0.7.9",
+  "type": "commandbox-modules",
+  "author": "Chris Simmons (csimmons.dev)",
+  "shortDescription": "CommandBox module for reading, filtering, and rendering DISA STIG XCCDF content.",
+  "description": "StigViewer CFML is a CommandBox module that provides CLI tools for working with DISA STIG XCCDF files. It supports summarizing STIG benchmarks, filtering rules by severity or STIG category (CAT I/II/III), exporting rule data to JSON, and rendering official DISA XSL stylesheets into HTML reports using CFML.",
+  "keywords": [
+    "stig",
+    "xccdf",
+    "disa",
+    "security",
+    "compliance",
+    "rmf",
+    "commandbox",
+    "cfml"
+  ],
+  "license": [
+    {
+      "type": "Apache-2.0",
+      "url": "https://www.apache.org/licenses/LICENSE-2.0"
+    }
+  ],
+  "contributors": []
+}
